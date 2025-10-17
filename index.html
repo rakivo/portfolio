@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Mark Tyrkba (rakivo) - Portfolio</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-rust.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-asm.min.js"></script>
+
+<script>
+Prism.languages.ninja = {
+  'comment': /#.*/,
+  'keyword': /\b(build|rule|phony|default)\b/,
+  'variable': /\$\w+/,
+  'string': /".*?"/
+};
+Prism.languages.brik = {
+  'comment': /;.*/,
+
+  'keyword': /\b(?:text|rodata|data|bss|section|extern|extrn|global|globl|space|string|stringzj|ascii|asciiz|include|word|hword)\b/i,
+
+  'number': /\b(?:0x[a-fA-F0-9]+|\d+)\b/,
+
+  'operator': /[+\-*/=<>!&|]/,
+
+  'punctuation': /[:,]/,
+
+  'label': {
+    pattern: /^[a-zA-Z_]\w*(?=:)/m,
+    alias: 'function'
+  },
+
+  'directive': {
+    pattern: /^\s*\.\w+/m,
+    alias: 'keyword'
+  },
+
+  'string': /"(?:\\.|[^"\\])*"/
+};
+</script>
+
+<style>
+  /* Apple SF Pro font */
+  body {
+    font-family: "SF Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f5f5f7;
+    color: #1c1c1e;
+    max-width: 900px;
+    margin: auto;
+    padding: 2em;
+    line-height: 1.6;
+  }
+
+  h1 {
+      font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 250;
+      font-size: 2.5em;
+      letter-spacing: -0.5px;
+      color: #1c1c1e;
+      margin-top: 0.5em;
+      margin-bottom: 0.3em;
+  }
+
+  h2 {
+      font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 600;
+      font-size: 1.8em;
+      letter-spacing: -0.3px;
+      color: #1c1c1e;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+  }
+
+  h3 {
+      font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 600;
+      font-size: 1.3em;
+      letter-spacing: -0.2px;
+      color: #1c1c1e;
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+  }
+
+  a {
+    color: #007aff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #d1d1d6;
+    margin: 2em 0;
+  }
+
+  section {
+    margin-bottom: 3em;
+  }
+
+  /* Project section — completely flat, no shadows, no rounded corners */
+  .project {
+    margin-bottom: 2em;
+    padding: 0; /* no padding around the container */
+    border-bottom: 1px solid #d1d1d6;
+  }
+
+  .placeholder {
+    color: #8e8e93;
+    font-style: italic;
+  }
+
+  .placeholder a {
+    color: #0051a8;
+  }
+
+  /* Toggle button as a flat inline control */
+  .toggle-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: #1c1c1e; /* same as text */
+    font-weight: 500;
+    font-size: 0.95em;
+    user-select: none;
+    margin: 0.5em 0;
+  }
+
+  .toggle-button::before {
+    content: "▶"; /* right-pointing triangle */
+    display: inline-block;
+    margin-right: 0.4em;
+    transition: transform 0.3s ease;
+    font-size: 0.85em;
+  }
+
+  .toggle-button.open::before {
+    transform: rotate(90deg); /* points down when open */
+  }
+
+  .content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    margin-top: 0.5em;
+  }
+
+  .content.open {
+    max-height: 2000px;
+    opacity: 1;
+  }
+
+  .project-link {
+    color: #007aff;      /* Apple-style accent color */
+    font-weight: 600;    /* slightly bolder */
+    text-decoration: none;
+  }
+
+  .project-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Remove default list styling */
+  ul, ol {
+      list-style: none;
+      padding-left: 0;
+      margin-left: 0;
+  }
+
+  .subtitle {
+    color: #8e8e93; /* gray color */
+    font-weight: normal; /* optional: make it lighter than the h3 */
+    font-size: 0.9em;  /* optional: slightly smaller */
+  }
+
+  /* Flat, minimal "bullet" styling for items */
+  .other-project-list li::before, .skills-list li::before {
+    content: "-"; /* use a simple dot */
+    color: #1c1c1e;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+
+  pre {
+    background: #f5f5f7; /* flat, same as page */
+    padding: 1em 0;
+    font-family: "SF Mono", monospace;
+    overflow-x: auto;
+    font-size: 0.95em;
+    margin-top: 0.5em;
+  }
+
+  p, li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+<h1>Mark Tyrkba (rakivo)</h1>
+<p><strong>Email:</strong> <a href="mailto:marktyrkba456@gmail.com">marktyrkba456@gmail.com</a></p>
+<p><strong>GitHub:</strong> <a href="https://github.com/rakivo">github.com/rakivo</a></p>
+</header>
+
+<hr>
+
+<section id="about-me">
+<h2>About Me</h2>
+<p>
+I am a fully self-taught 16-year-old systems programmer and compiler enthusiast. I focus on low-level programming, compilers, and data-oriented design. I always prioritize performance; writing inefficient software is unacceptable to me. I enjoy building tools close to the hardware and writing efficient, minimal and most importantly simple code.
+</p>
+</section>
+
+<hr>
+
+<section id="projects">
+<h2>Highlight Projects</h2>
+
+<div class="project">
+  <h3>
+    1. The
+    <a href="https://github.com/rakivo/rok" target="_blank" rel="noopener noreferrer" class="project-link">
+      rok
+    </a> language Compiler <span class="subtitle">planned public release: late October – early November</span>
+  </h3>
+  <p>
+A compiler written in Rust, completely from scratch, fully parallelized, with its own SSA IR, Register Allocator, Bytecode, and a Register Machine.
+Supports meta-programming: all user-written code can communicate with the compiler and execute at compile time.
+All while remaining efficient: cache-friendly memory layouts, optimized algorithms, and safe concurrency.
+  </p>
+
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Code Examples & Demos</div>
+  <div class="content">
+  <pre><code class = "language-rust">
+fib :: (n: i64) -> i64 {
+    a := 0;
+    b := 1;
+
+    if n == 0 then return a;
+    if n == 1 then return b;
+
+    for 2..n+1 {
+        c := a + b;
+        a = b;
+        b = c;
+    }
+
+    return b;
+}
+
+main :: () {
+    N :: 25;
+
+    print("fib(%) = %\n", N, fib(N));
+}
+
+#run main(); // runs at compile time, prints: "fib(25) = 75025"
+
+#import "std.rok";
+  </code></pre>
+
+  <p>
+Meta-program example that emits a compiled object file:
+  </p>
+
+  <pre><code class = "language-rust">
+#run build();
+
+build :: () {
+    // Don't emit output for this specific module
+    build_options := BuildOptions { do_output = false, .. };
+    set_build_options(*build_options);
+
+    demo := register_module("examples/fib.rok");
+
+    // Schedule a codegen job for `demo` module
+    plan_job(demo, Job.CODEGEN);
+}
+
+#import "meta.rok";
+  </code></pre>
+    <p class="placeholder">
+    Currently in a private repository; planned public release: late October – early November.
+    </p>
+    <p class="placeholder">Demo video/GIF will go here soon</p>
+  </div>
+</div>
+
+<div class="project">
+  <h3>
+    2.
+    <a href="https://github.com/rakivo/brik-asm" target="_blank" rel="noopener noreferrer" class="project-link">
+      brik-asm
+    </a> — RISC-V Assembler
+    &
+    <a href="https://github.com/rakivo/brik" target="_blank" rel="noopener noreferrer" class="project-link">
+      brik
+    </a> — Object file building library
+  </h3>
+  <p>
+A Rust library providing a Cranelift-like SSABuilder API for building RISC-V object files, including custom sections, instructions, relocations, and more.
+Emphasizes performance: cache-friendly memory layout and parsing accelerated via SSE2, AVX2, AVX512BW on x86-64 and Neon on AArch64.
+Runs in QEMU emulator.
+  </p>
+
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Code Examples & Demos</div>
+  <div class="content">
+  <pre><code class = "language-brik">
+.include "std"
+
+.text
+.extern printf
+.global main
+
+main:
+    prologue
+
+    ; t0 = 69
+    li      t0, 69
+    printf1 fmt1, t0      ; prints: "t0 = 69"
+
+    ; t1 = -t0
+    li      t0, 69
+    neg     t1, t0
+    printf1 fmt2, t1      ; prints: "neg(t0) = -69"
+
+    ; t2 = ~t0
+    li      t0, 69
+    not     t2, t0
+    printf1 fmt3, t2      ; prints: "not(t0) = -70"
+
+    j done
+
+skip:
+    printf1 fmt_skip, t0
+    epilogue
+    reti 0
+
+done:
+    epilogue
+    reti 0
+
+.rodata
+fmt1:
+    .stringz "t0      = %ld\n"
+
+fmt2:
+    .stringz "neg(t0) = %ld\n"
+
+fmt3:
+    .stringz "not(t0) = %ld\n"
+
+fmt_skip:
+    .stringz "this should not print, t0=%ld\n"
+    </code></pre>
+    <p class="placeholder">Demo video/GIF will go here soon</p>
+  </div>
+</div>
+
+<div class="project">
+  <h3>
+    3.
+    <a href="https://github.com/rakivo/stalkr" target="_blank" rel="noopener noreferrer" class="project-link">
+      Stalkr
+    </a> — language-agnostic TODO Tracker
+  </h3>
+
+  <p>
+A language-agnostic Rust tool for scanning your project for TODOs and either reporting, purging, or listing them.
+Heavily inspired by
+<a href="https://github.com/tsoding/snitch" target="_blank" rel="noopener noreferrer" class="project-link">
+    tsoding/snitch
+</a>, rewritten in Rust for high performance with worker-parallelized execution.
+Fully modular and host-agnostic (works with GitHub or other platforms via a pluggable API layer).
+  </p>
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Demo</div>
+  <div class="content">
+  <pre><code class = "language-rust">
+// ...
+
+TK::CQuote => {
+    // Eat the starting c" token
+    self.lexer.eat_next_token()?;
+
+    // Parse the actual string literal
+    let (loc, span) = self.parse_string_literal()?;
+    let src_str = span.s(&self.mo);
+
+    // Prepare a NUL-terminated string
+    let mut nul_terminated = String::with_capacity(src_str.len() + 1);
+    util::unescape_string(src_str, &mut nul_terminated);
+
+    // Ensure proper NUL termination
+    if nul_terminated.bytes().last().is_some_and(|b| b != b'\0') {
+        nul_terminated.push('\0');
+    } else {
+        // TODO(#252): Emit a warning if a C string literal already ends with `\0`
+    }
+
+    // Register the string literal and build the expression
+    let str_lit_id = self.pc.new_str_lit(nul_terminated);
+
+    Expr {
+        loc,
+        span,
+        kind: EK::ConstStr(str_lit_id),
+        ...
+    }
+}
+    </code></pre>
+    <p class="placeholder">Demo video/GIF will go here soon</p>
+  </div>
+</div>
+
+<div class="project">
+  <h3>
+    4.
+    <a href="https://github.com/rakivo/rush" target="_blank" rel="noopener noreferrer" class="project-link">
+      Rush
+    </a> — Rust-based build system inspired by Ninja
+  </h3>
+  <p>
+A Rust-based build system inspired by Ninja. Rush executes build scripts efficiently, sometimes matching or exceeding Ninja's speed on typical workloads.
+It demonstrates parallelism, minimal overhead, and custom build pipeline design.
+  </p>
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Build Script Example</div>
+  <div class="content">
+  <pre><code class = "language-ninja">
+cflags = -std=gnu99 -Wall -Wextra -O3
+builddir = build
+
+phony all
+build all: $builddir/main run
+
+rule cc
+  depfile = $out.d
+  command = gcc -MD -MF $out.d $cflags -o $out -c $in
+
+rule link
+  command = cc $cflags -o $out $in
+
+build $builddir/foo.o: cc foo.c
+build $builddir/bar.o: cc bar.c
+build $builddir/main.o: cc main.c
+
+build $builddir/main: link $builddir/foo.o $
+                           $builddir/bar.o $
+                           $builddir/main.o
+  cflags = -std=gnu99 -O2
+
+phony run
+build run:
+  command = ./$builddir/main
+
+phony clean
+build clean:
+  command = rm -f $builddir/*
+    </code></pre>
+    <p class="placeholder">Demo video/GIF will go here soon</p>
+  </div>
+</div>
+
+</section>
+
+<section id="other-projects">
+  <h2>Other Projects</h2>
+  <ul class = "other-project-list">
+    <li><strong><a href="https://github.com/rakivo/raylib-wasm" target="_blank">raylib-WASM</a>:</strong> A Rust crate that allows seamless execution of your Raylib games in-browser via pure WASM (no Emscripten) as well as natively. Implements a subset of raylib; Contributions welcome - submit a PR to extend raylib coverage.</li>
+    <li><strong><a href="https://github.com/rakivo/vmz" target="_blank">vmz</a>:</strong> An experimental stack-based virtual machine written in Zig, with its own assembly-like language that can be compiled to NASM.</li>
+  </ul>
+  <p class="placeholder">
+    I've worked on many other projects not shown here - feel free to explore them on my <a href="https://github.com/rakivo" target="_blank">GitHub page</a>.
+  </p>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <ul class="skills-list">
+    <li>Expert in Rust, C/C++, Zig, and low-level systems programming.</li>
+    <li>Designed and implemented multiple compilers and virtual machines.</li>
+    <li>Strong understanding of data-oriented design and cache-friendly algorithms.</li>
+    <li>Experienced with x86_64 and RISC-V assembly and ELF object file encoding.</li>
+    <li>Proficient with Git, Cargo, and CI/CD pipelines.</li>
+  </ul>
+</section>
+
+<hr>
+
+<section id="demo-media">
+<h2>Demo / Media</h2>
+<p class="placeholder">
+This section will soon showcase demo videos, screenshots, GIFs, and other project media...
+</p>
+</section>
+
+<hr>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>
+    <strong>Email:</strong> <a href="mailto:marktyrkba456@gmail.com">marktyrkba456@gmail.com</a><br>
+    <strong>GitHub:</strong> <a href="https://github.com/rakivo" target="_blank">github.com/rakivo</a><br>
+  </p>
+</section>
+
+<script>
+function toggleContent(button) {
+  const content = button.nextElementSibling;
+  content.classList.toggle('open');
+  button.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
