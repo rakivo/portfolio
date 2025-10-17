@@ -178,19 +178,18 @@ Prism.languages.brik = {
       margin-left: 0;
   }
 
-  .subtitle {
-    color: #8e8e93; /* gray color */
-    font-weight: normal; /* optional: make it lighter than the h3 */
-    font-size: 0.9em;  /* optional: slightly smaller */
-  }
-
-  /* Flat, minimal "bullet" styling for items */
-  .other-project-list li::before, .skills-list li::before {
-    content: "-"; /* use a simple dot */
+  li::before {
+    content: "-";
     color: #1c1c1e;
     display: inline-block;
     width: 1em;
     margin-left: -1em;
+  }
+
+  .subtitle {
+    color: #8e8e93; /* gray color */
+    font-weight: normal; /* optional: make it lighter than the h3 */
+    font-size: 0.9em;  /* optional: slightly smaller */
   }
 
   pre {
@@ -478,7 +477,7 @@ build clean:
 
 <section id="other-projects">
   <h2>Other Projects</h2>
-  <ul class = "other-project-list">
+  <ul>
     <li><strong><a href="https://github.com/rakivo/raylib-wasm" target="_blank">raylib-WASM</a>:</strong> A Rust crate that allows seamless execution of your Raylib games in-browser via pure WASM (no Emscripten) as well as natively. Implements a subset of raylib; Contributions welcome - submit a PR to extend raylib coverage.</li>
     <li><strong><a href="https://github.com/rakivo/vmz" target="_blank">vmz</a>:</strong> An experimental stack-based virtual machine written in Zig, with its own assembly-like language that can be compiled to NASM.</li>
   </ul>
@@ -489,7 +488,7 @@ build clean:
 
 <section id="skills">
   <h2>Skills</h2>
-  <ul class="skills-list">
+  <ul>
     <li>Expert in Rust, C/C++, Zig, and low-level systems programming.</li>
     <li>Designed and implemented multiple compilers and virtual machines.</li>
     <li>Strong understanding of data-oriented design and cache-friendly algorithms.</li>
@@ -497,6 +496,14 @@ build clean:
     <li>Proficient with Git, Cargo, and CI/CD pipelines.</li>
   </ul>
 </section>
+
+<hr>
+
+<h2>Other Achievements</h2>
+<ul>
+  <li>400+ <a href="https://leetcode.com/marktyrkba" target="_blank">LeetCode</a> problems solved; 1602 contest rating</li>
+  <li>Placed top-3 in regional programming olympiads</li>
+</ul>
 
 <hr>
 
@@ -511,10 +518,11 @@ This section will soon showcase demo videos, screenshots, GIFs, and other projec
 
 <section id="contact">
   <h2>Contact</h2>
-  <p>
-    <strong>Email:</strong> <a href="mailto:marktyrkba456@gmail.com">marktyrkba456@gmail.com</a><br>
-    <strong>GitHub:</strong> <a href="https://github.com/rakivo" target="_blank">github.com/rakivo</a><br>
-  </p>
+  <ul>
+    <li><strong>Email:</strong> <a href="mailto:marktyrkba456@gmail.com">marktyrkba456@gmail.com</a></li>
+    <li><strong>GitHub:</strong> <a href="https://github.com/rakivo" target="_blank">rakivo</a></li>
+    <li><strong>Telegram:</strong> <a href="https://t.me/rakivo88" target="_blank">@rakivo88</a> — updates, releases, and occasional thoughts</li>
+  </ul>
 </section>
 
 <script>
