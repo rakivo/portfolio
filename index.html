@@ -148,6 +148,14 @@ Prism.languages.brik = {
     transform: rotate(90deg); /* points down when open */
   }
 
+  .demo-video {
+    width: 100%;
+    max-width: 890px;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* centers it */
+  }
+
   .content {
     max-height: 0;
     overflow: hidden;
@@ -661,7 +669,8 @@ selection (e.g. 1,2; 'a' all; 's' skip file; 'h' help; '^C' quit): 1
       </a>
     </p>
 
-    <video autoplay loop muted playsinline width="890">
+    <p class="placeholder">Tap on the video to fullscreen</p>
+    <video class="demo-video" autoplay loop muted playsinline>
       <source src="./assets/stalkr.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -729,7 +738,8 @@ build clean:
     <a href="https://en.wikipedia.org/wiki/Lua" target="_blank" rel="noopener noreferrer" class="project-link">Lua</a>
     </p>
 
-    <video autoplay loop muted playsinline width="890">
+    <p class="placeholder">Tap on the video to fullscreen</p>
+    <video class="demo-video" autoplay loop muted playsinline>
       <source src="./assets/rush.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -789,6 +799,18 @@ This section will soon showcase demo videos, screenshots, GIFs, and other projec
 </section>
 
 <script>
+document.querySelectorAll('.demo-video').forEach(video => {
+  video.addEventListener('click', () => {
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) { // Safari
+      video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) { // IE11
+      video.msRequestFullscreen();
+    }
+  });
+});
+
 function toggleContent(button) {
   const content = button.nextElementSibling;
   const isOpen = content.classList.toggle('open');
