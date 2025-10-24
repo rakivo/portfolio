@@ -151,14 +151,12 @@ Prism.languages.brik = {
   .content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
     opacity: 0;
-    margin-top: 0.5em;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
   }
 
   .content.open {
-    max-height: 2000px;
-    opacity: 1;
+    overflow: visible;
   }
 
   .project-link {
@@ -244,6 +242,11 @@ All while remaining efficient: cache-friendly memory layouts, optimized algorith
 
   <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Code Examples & Demos</div>
   <div class="content">
+
+  <p>
+Meta-program that interprets and runs two previous examples:
+  </p>
+
   <pre><code class = "language-rust">
 fib :: (n: i64) -> i64 {
     a := 0;
@@ -262,32 +265,87 @@ fib :: (n: i64) -> i64 {
 }
 
 main :: () {
-    N :: 25;
+    N :: 77;
 
     print("fib(%) = %\n", N, fib(N));
 }
 
-#run main(); // runs at compile time, prints: "fib(25) = 75025"
+#run main(); // runs at compile time, prints: "fib(77) = 5527939700884757"
 
 #import "std.rok";
   </code></pre>
 
   <p>
-Meta-program example that emits a compiled object file:
+Basic raylib example:
+  </p>
+
+  <pre><code class = "language-rust">
+main :: () {
+    SetTraceLogLevel(TraceLogLevel.NONE);
+
+    SetTargetFPS(60);
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE.data);
+    defer CloseWindow();
+
+    text_width := MeasureText(TEXT.data, FONT_SIZE);
+
+    cx := WINDOW_WIDTH  / 2 - text_width / 2;
+    cy := WINDOW_HEIGHT / 2 - FONT_SIZE / 2;
+
+    while !WindowShouldClose() {
+        if IsKeyPressed(Key.W) then cy -= POS_INCREMENT;
+        if IsKeyPressed(Key.A) then cx -= POS_INCREMENT;
+        if IsKeyPressed(Key.S) then cy += POS_INCREMENT;
+        if IsKeyPressed(Key.D) then cx += POS_INCREMENT;
+
+        BeginDrawing();
+        defer EndDrawing();
+
+        ClearBackground(BACKGROUND_COLOR);
+
+        DrawText(TEXT.data, cx, cy, FONT_SIZE, TEXT_COLOR);
+    }
+}
+
+FONT_SIZE :: 75;
+
+POS_INCREMENT :: 50;
+
+WINDOW_WIDTH  :: 800;
+WINDOW_HEIGHT :: 600;
+WINDOW_TITLE  :: c"raylib-demo";
+
+TEXT_COLOR :: Color {..};
+BACKGROUND_COLOR :: Color { r = 24, g = 24, b = 24, .. };
+
+TEXT :: c"hello from language";
+
+#import "std.rok";
+#import "raylib.rok";
+
+#run main(); // lets run the whole program at compile time, why not ? :D
+  </code></pre>
+
+  <p>
+Meta-program that runs at compile-time, interprets and runs two previous examples:
   </p>
 
   <pre><code class = "language-rust">
 #run build();
 
 build :: () {
-    // Don't emit output for this specific module
-    build_options := BuildOptions { do_output = false, .. };
-    set_build_options(*build_options);
+    // Don't codegen this specific module
+    dont_output_this_module();
 
-    demo := register_module("examples/fib.rok");
+    raylib_demo := register_module("examples/raylib-demo.rok");
 
-    // Schedule a codegen job for `demo` module
-    plan_job(demo, Job.CODEGEN);
+    // Schedule a codegen job for `raylib-demo` module
+    plan_job(raylib_demo, Job.CODEGEN);
+
+    fib_demo := register_module("examples/fib-demo.rok");
+
+    // Schedule a codegen job for `fib-demo` module
+    plan_jobfib_demo, Job.CODEGEN);
 }
 
 #import "meta.rok";
@@ -318,7 +376,7 @@ Runs in QEMU emulator.
 
   <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Code Examples & Demos</div>
   <div class="content">
-  <pre><code class = "language-brik">
+    <pre><code class = "language-brik">
 .include "std"
 
 .text
@@ -366,6 +424,141 @@ fmt3:
 fmt_skip:
     .stringz "this should not print, t0=%ld\n"
     </code></pre>
+
+  <p>
+  Quick example of using `brik` to build a factorial-computing program
+  </p>
+
+    <pre><code class = "language-rust">
+fn produce_factorial_obj<'a>() -> Object<'a> {
+    let mut asm = Assembler::new(
+        BinaryFormat::Elf,
+        Arch::Riscv64,
+        Endianness::Little,
+        "rv64gc"
+    );
+
+    asm.set_object_flags(FileFlags::Elf {
+        os_abi: 0,
+        abi_version: 0,
+        e_flags: 0x4,
+    });
+
+    // .rodata section for format strings
+    let _rodata = asm.add_rodata_section_at_end();
+
+    let  input_fmt_sym = asm.define_data(b"input_fmt",  b"enter a number: \0");
+    let  scanf_fmt_sym = asm.define_data(b"scanf_fmt",  b"%ld\0");
+    let result_fmt_sym = asm.define_data(b"result_fmt", b"factorial: %ld\n\0");
+
+    // =================
+    // external symbols
+    // =================
+
+    let printf_sym = asm.add_symbol_extern(
+        b"printf",
+        SymbolKind::Text,
+        SymbolScope::Dynamic
+    );
+
+    let scanf_sym = asm.add_symbol_extern(
+        b"scanf",
+        SymbolKind::Text,
+        SymbolScope::Dynamic
+    );
+
+    let text_section = asm.add_text_section_at_end();
+
+    asm.emit_function_prologue();
+
+    // allocate space on stack for input number (8 bytes)
+    asm.emit_addi(SP, SP, -8);
+
+    // print input prompt
+    asm.emit_pcrel_load_addr(A0, input_fmt_sym, 0);
+    asm.emit_call_plt(printf_sym);
+
+    // read input number
+    asm.emit_pcrel_load_addr(A0, scanf_fmt_sym, 0);
+    asm.emit_addi(A1, SP, 0);
+    asm.emit_call_plt(scanf_sym);
+
+    // load input number into s1
+    asm.emit_ld(S1, SP, 0);
+
+    // init factorial result in s2 (result = 1)
+    asm.emit_addi(S2, ZERO, 1);
+
+    // init counter in s3 (i = 1)
+    asm.emit_addi(S3, ZERO, 1);
+
+    let loop_lbl = asm.add_label_here(
+        b".fact_loop",
+        SymbolKind::Text,
+        SymbolScope::Compilation
+    );
+
+    let done_lbl = asm.declare_label(
+        b".fact_done",
+        SymbolKind::Text,
+        SymbolScope::Compilation
+    );
+
+    // loop condition: if i > n, exit
+    asm.emit_branch_to(
+        done_lbl,
+        // if s1 < s3 (n < i)
+        BLT { s1: S1, s2: S3, im: 0 },
+    );
+
+    // result *= i
+    asm.emit_bytes(MUL { d: S2, s1: S2, s2: S3 });
+
+    // i++
+    asm.emit_addi(S3, S3, 1);
+
+    // jump back to loop
+    asm.emit_branch_to(
+        loop_lbl,
+        JAL { d: ZERO, im: 0 },
+    );
+
+    ...
+
+    asm.add_symbol(
+        b"main",
+        0,
+        asm.section_size(text_section),
+        SymbolKind::Text,
+        SymbolScope::Dynamic,
+        false,
+        SymbolFlags::None
+    );
+
+    asm.finish().unwrap()
+}
+
+fn main() -> Result<(), Box<dyn error::Error>> {
+    let args = env::args().collect::<Vec<_>>();
+
+    let Some(output_path) = args.get(1) else {
+        println!{
+            "usage: {prog} <output.o>",
+            prog = args[0]
+        };
+        return Ok(())
+    };
+
+    let obj = produce_factorial_obj();
+
+    let file = fs::File::create(output_path)?;
+    obj.write_stream(&file)?;
+
+    println!("[wrote object file to {output_path}]");
+
+    Ok(())
+}
+    </code></pre>
     <p class="placeholder">Demo video/GIF will go here soon</p>
   </div>
 </div>
@@ -388,29 +581,29 @@ Fully modular and host-agnostic (works with GitHub or other platforms via a plug
   </p>
   <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Demo</div>
   <div class="content">
+
+  <p>
+  Brief example of a tagged (reported) TODO in real code
+  </p>
+
   <pre><code class = "language-rust">
 // ...
 
 TK::CQuote => {
-    // Eat the starting c" token
-    self.lexer.eat_next_token()?;
+    self.lexer.eat_next_token()?; // c"
 
-    // Parse the actual string literal
     let (loc, span) = self.parse_string_literal()?;
     let src_str = span.s(&self.mo);
 
-    // Prepare a NUL-terminated string
     let mut nul_terminated = String::with_capacity(src_str.len() + 1);
     util::unescape_string(src_str, &mut nul_terminated);
 
-    // Ensure proper NUL termination
     if nul_terminated.bytes().last().is_some_and(|b| b != b'\0') {
         nul_terminated.push('\0');
     } else {
         // TODO(#252): Emit a warning if a C string literal already ends with `\0`
     }
 
-    // Register the string literal and build the expression
     let str_lit_id = self.pc.new_str_lit(nul_terminated);
 
     Expr {
@@ -421,7 +614,61 @@ TK::CQuote => {
     }
 }
     </code></pre>
-    <p class="placeholder">Demo video/GIF will go here soon</p>
+
+    <p>
+    Run <a href="https://github.com/rakivo/stalkr" target="_blank" rel="noopener noreferrer" class="project-link">Stalkr</a> on this codebase you'll see this:
+    </p>
+
+    <pre><code class = "language-rust">
+[reporting mode]
+
+[detected project]: https://github.com/rakivo/rok
+
+[todoʼs from]: rok_frontend/src/parser.rs
+
+1. [line 1662]: Warn if a c string literal already ends with \0
+
+selection (e.g. 1,2; 'a' all; 's' skip file; 'h' help; '^C' quit):
+    </code></pre>
+
+    <p>
+    Just press `1` and return (enter), and the TODO is going to get reported:
+    </p>
+
+    <pre><code class = "language-rust">
+[reporting mode]
+
+[detected project]: https://github.com/rakivo/rok
+
+[todoʼs from]: rok_frontend/src/parser.rs
+
+1. [line 1662]: Warn if a c string literal already ends with \0
+
+selection (e.g. 1,2; 'a' all; 's' skip file; 'h' help; '^C' quit): 1
+[master 24dce81] Add TODO(#341): Warn if a c string literal already ends with \0
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[1/1] todoʼs reported
+    </code></pre>
+
+    <p>
+    A video of me using
+      <a href="https://github.com/rakivo/stalkr" target="_blank" rel="noopener noreferrer" class="project-link">
+          Stalkr
+      </a> to report TODO's while I was programming
+
+      <a href="https://github.com/rakivo/brik" target="_blank" rel="noopener noreferrer" class="project-link">
+        brik
+      </a>
+    </p>
+
+    <video autoplay loop muted playsinline width="890">
+      <source src="./assets/stalkr.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <p class="placeholder">
+    The bug with `0 insertions` is already fixed btw .. :D
+    </p>
   </div>
 </div>
 
@@ -469,7 +716,23 @@ phony clean
 build clean:
   command = rm -f $builddir/*
     </code></pre>
-    <p class="placeholder">Demo video/GIF will go here soon</p>
+
+    <p>
+    Me showcasing
+    <a href="https://github.com/rakivo/rush" target="_blank" rel="noopener noreferrer" class="project-link">Rush</a>
+    building
+
+    <a href="https://en.wikipedia.org/wiki/Ninja_(build_system)" target="_blank" rel="noopener noreferrer" class="project-link">Ninja</a>
+
+    and
+
+    <a href="https://en.wikipedia.org/wiki/Lua" target="_blank" rel="noopener noreferrer" class="project-link">Lua</a>
+    </p>
+
+    <video autoplay loop muted playsinline width="890">
+      <source src="./assets/rush.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
   </div>
 </div>
 
@@ -528,8 +791,16 @@ This section will soon showcase demo videos, screenshots, GIFs, and other projec
 <script>
 function toggleContent(button) {
   const content = button.nextElementSibling;
-  content.classList.toggle('open');
+  const isOpen = content.classList.toggle('open');
   button.classList.toggle('open');
+
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + "px";
+    content.style.opacity = 1;
+  } else {
+    content.style.maxHeight = null;
+    content.style.opacity = 0;
+  }
 }
 </script>
 
