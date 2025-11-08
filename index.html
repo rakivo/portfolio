@@ -198,6 +198,10 @@ Prism.languages.brik = {
     font-size: 0.9em;  /* optional: slightly smaller */
   }
 
+  #about-me p {
+    margin-bottom: 1.5em;
+  }
+
   pre {
     background: #f5f5f7; /* flat, same as page */
     padding: 1em 0;
@@ -224,10 +228,23 @@ Prism.languages.brik = {
 <hr>
 
 <section id="about-me">
-<h2>About Me</h2>
-<p>
-I am a fully self-taught 16-year-old systems programmer and compiler enthusiast. I focus on low-level programming, compilers, and data-oriented design. I always prioritize performance, simplicity and maintainability; software is too important for us to be sloppy about it.
-</p>
+  <h2>About Me</h2>
+  <p>
+    I’m a self-taught 16-year-old systems programmer and compiler enthusiast, focused on low-level programming and high-quality, high-performance software. I care deeply about the performance, simplicity, and maintainability of my software, I believe it's too important for us to be sloppy about it.
+  </p>
+  <p>
+    I build compilers, virtual machines, custom SSA-based IRs, bytecode formats, and many other interesting projects.
+  </p>
+  <p>
+    I enjoy understanding how everything works from the ground up, and I strive for code that is simple, efficient, and understandable. Currently, I’m exploring advanced compiler meta-programming mechanisms for my upcoming language.
+  </p>
+  <p>
+    I believe much of today’s software is built with low standards of quality. As Jonathan Blow once said,
+    <em>“I think we're now in a situation where everybody in the world is flooded with low quality software, and everybody wishes that they had higher quality software.”</em>
+  </p>
+  <p>
+    My goal in life is to make it easier to write high-quality software, and eventually, to help teach others how to do the same.
+  </p>
 </section>
 
 <hr>
@@ -240,28 +257,26 @@ I am a fully self-taught 16-year-old systems programmer and compiler enthusiast.
     1. The
     <a href="https://github.com/rakivo/rok" target="_blank" rel="noopener noreferrer" class="project-link">
       rok
-    </a> language Compiler <span class="subtitle">planned public release: late October – early November</span>
+    </a> language Compiler <span class="subtitle">planned public release in November</span>
   </h3>
   <p>
-A compiler written in Rust, completely from scratch, fully parallelized, with its own SSA IR, Bytecode, and a Register Machine.
-With focus on meta-programming: all user-written code can execute at compile time and communicate with the compiler (e.g. a meta-program that runs at compile-time and acts as a build-system).
-All while remaining efficient: cache-friendly memory layouts, optimized algorithms, and safe concurrency.
+    A compiler written in Rust, completely from scratch, fully parallelized, with its own SSA IR, Bytecode, Polymorph solver, and a Register Machine.
+    With focus on meta-programming: all user-written code can execute at compile time and communicate with the compiler.
   </p>
 
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Code Examples & Demos</div>
+  <!-- Fib Meta-Programming Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Fib Compile-Time Demo</div>
   <div class="content">
-
-  <p>
-Meta-program that interprets and runs two previous examples:
-  </p>
-
-  <pre><code class = "language-rust">
+    <p>
+      A basic program that calculates Fibonacci numbers at compile-time.
+    </p>
+    <pre><code class="language-rust">
 fib :: (n: i64) -> i64 {
     a := 0;
     b := 1;
 
-    if n == 0 then return a;
-    if n == 1 then return b;
+    if n == 0 return a;
+    if n == 1 return b;
 
     for 2..n+1 {
         c := a + b;
@@ -274,95 +289,191 @@ fib :: (n: i64) -> i64 {
 
 main :: () {
     N :: 77;
-
     print("fib(%) = %\n", N, fib(N));
 }
 
-#run main(); // runs at compile time, prints: "fib(77) = 5527939700884757"
+#run main(); // runs at compile time, prints: fib(77) = 5527939700884757
 
 #import "std.rok";
-  </code></pre>
+    </code></pre>
+  </div>
 
-  <p>
-Basic raylib example:
-  </p>
+  <!-- Raylib Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Raylib Demo</div>
+  <div class="content">
+    <p>
+      A basic graphics example using Raylib. Demonstrates 2D transformations, shaders, etc.
+    </p>
+    <pre><code class="language-rust">
+rotate :: (p: Vector2, theta: f32) -> Vector2 {
+    return vec2(
+        p.x * cosf(theta) - p.y * sinf(theta),
+        p.x * sinf(theta) + p.y * cosf(theta)
+    );
+}
 
-  <pre><code class = "language-rust">
 main :: () {
-    SetTraceLogLevel(TraceLogLevel.NONE);
-
     SetTargetFPS(60);
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE.data);
+    InitWindow(WINDOW_WIDTH as i32, WINDOW_HEIGHT as i32, WINDOW_TITLE.data);
     defer CloseWindow();
 
-    text_width := MeasureText(TEXT.data, FONT_SIZE);
+    font := LoadFontEx(c"font.ttf".data, FONT_SIZE as i32, null, 0);
+    defer UnloadFont(font);
 
-    cx := WINDOW_WIDTH  / 2 - text_width / 2;
-    cy := WINDOW_HEIGHT / 2 - FONT_SIZE / 2;
+    center := vec2(WINDOW_WIDTH / 2.0, WINDOW_WIDTH / 2.0);
+    size   := WINDOW_HEIGHT * 0.45;
+    angle  := 0.0;
+
+    shader := LoadShaderFromMemory(null, SHADER.data);
+    defer UnloadShader(shader);
+
+    time_loc := GetShaderLocation(shader, c"time".data);
+    resolution_loc := GetShaderLocation(shader, c"resolution".data);
+
+    resolution := vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
+    SetShaderValue(shader, resolution_loc, *resolution, ShaderUniformDataType.VEC2);
+
+    text_size := MeasureTextEx(font, TEXT.data, FONT_SIZE, TEXT_SPACING);
+
+    text_center := vec2(
+        WINDOW_WIDTH  / 2.0 - text_size.x / 2.0,
+        WINDOW_HEIGHT / 2.0 - text_size.y / 2.0
+    );
 
     while !WindowShouldClose() {
-        if IsKeyPressed(Key.W) then cy -= POS_INCREMENT;
-        if IsKeyPressed(Key.A) then cx -= POS_INCREMENT;
-        if IsKeyPressed(Key.S) then cy += POS_INCREMENT;
-        if IsKeyPressed(Key.D) then cx += POS_INCREMENT;
+        angle += 0.02; // radians per frame
+
+        v1 := vec2(0.0, -size);               // top
+        v2 := vec2(-size / 2.0, size / 2.0);  // bottom left
+        v3 := vec2(size / 2.0, size / 2.0);   // bottom right
+
+        rv1 := rotate(v1, angle);
+        rv2 := rotate(v2, angle);
+        rv3 := rotate(v3, angle);
+
+        color := Color {
+            r = ((sinf(angle)          * 0.05  + 0.50) * 255.0) as u8,
+            g = ((sinf(angle + 2.0944) * 0.05  + 0.50) * 255.0) as u8,
+            b = ((sinf(angle + 4.1888) * 0.05  + 0.50) * 255.0) as u8,
+            a = ((sinf(angle * 2.0)    * 0.25  + 0.75) * 255.0) as u8
+        };
+
+        SetShaderValue(shader, time_loc, *angle, ShaderUniformDataType.FLOAT);
 
         BeginDrawing();
         defer EndDrawing();
 
         ClearBackground(BACKGROUND_COLOR);
 
-        DrawText(TEXT.data, cx, cy, FONT_SIZE, TEXT_COLOR);
+        DrawTextEx(font, TEXT.data, text_center, FONT_SIZE, TEXT_SPACING, TEXT_COLOR);
+
+        BeginShaderMode(shader);
+        defer EndShaderMode();
+
+        DrawTriangle(
+            vec2(center.x + rv1.x, center.y + rv1.y),
+            vec2(center.x + rv2.x, center.y + rv2.y),
+            vec2(center.x + rv3.x, center.y + rv3.y),
+            color
+        );
     }
 }
 
-FONT_SIZE :: 75;
+#import "std.rok";
+#import "math.rok";
+#import "raylib.rok";
 
-POS_INCREMENT :: 50;
+FONT_SIZE :: 75.0;
+TEXT_SPACING :: 2.0;
 
-WINDOW_WIDTH  :: 800;
-WINDOW_HEIGHT :: 600;
-WINDOW_TITLE  :: c"raylib-demo";
+WINDOW_WIDTH  :: 600.0;
+WINDOW_HEIGHT :: 600.0;
+WINDOW_TITLE  :: c"HELLO_FROM_ROK";
 
-TEXT_COLOR :: Color {..};
+TEXT_COLOR :: Color { .. };
 BACKGROUND_COLOR :: Color { r = 24, g = 24, b = 24, .. };
 
 TEXT :: c"hello from rok";
 
+SHADER :: c"... [full demo soon in the language's repository] ...";
+    </code></pre>
+  </div>
+
+  <!-- Array Generics Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Array Generics (Poly) Demo</div>
+  <div class="content">
+    <p>
+      Demonstrates some basic generic array operations using compound parameter types.
+    </p>
+    <pre><code class="language-rust">
+array_index   :: (arr: [] $T, index: i32)           -> T    { return arr[index]; }
+array_set     :: (arr: [] $T, index: i32, value: T) -> void { arr[index] = value; }
+array_clear   :: (arr: [] $T) { memset(arr.data, 0, sizeof(T) * arr.len); }
+
+main :: () {
+    int_array_showcase();
+    float_array_showcase();
+}
+
+int_array_showcase :: () {
+    int_arr : [10] i32;
+
+    for 0..10 array_set(int_arr, it, 100 * it);
+
+    array_set(int_arr, 0, 1337);
+
+    for 0..10 print("int_arr[%] = %\n", it, array_index(int_arr, it));
+
+    array_clear(int_arr);
+    print("array cleared.\n");
+
+    for int_arr print("[int] it = %\n", it);
+}
+
+float_array_showcase :: () {
+    float_arr : [10] f32;
+    for 0..10 array_set(float_arr, it, 100.0 * it as f32);
+    for float_arr print("[float] it = %\n", it);
+}
+
 #import "std.rok";
-#import "raylib.rok";
+    </code></pre>
+  </div>
 
-#run main(); // lets run the whole program at compile time, why not ? :D
-  </code></pre>
+  <!-- Basic Polymorphic Math Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Build meta-programming demo</div>
+  <div class="content">
+    <p>
+      A meta-program that registers all demo modules and schedules code generation for them. Demonstrates Rok's compile-time build orchestration.
+    </p>
+    <pre><code class="language-rust">
+fib_demo_path    :: "examples/fib-demo.rok";
+raylib_demo_path :: "examples/raylib-demo.rok";
+poly_demo_path   :: "examples/poly-demo.rok";
 
-  <p>
-Meta-program that runs at compile-time, interpreting and code-generating the two previous examples:
-  </p>
-
-  <pre><code class = "language-rust">
 #run build();
 
 build :: () {
-    // Don't codegen this specific module
+    // Prevent this module itself from being output
     dont_output_this_module();
 
-    raylib_demo := register_module("examples/raylib-demo.rok");
+    // Register modules
+    fib_module    := register_module(fib_demo_path);
+    raylib_module := register_module(raylib_demo_path);
+    poly_module   := register_module(poly_demo_path);
 
-    // Schedule a codegen job for `raylib-demo` module
-    plan_job(raylib_demo, Job.CODEGEN);
-
-    fib_demo := register_module("examples/fib-demo.rok");
-
-    // Schedule a codegen job for `fib-demo` module
-    plan_jobfib_demo, Job.CODEGEN);
+    // Schedule codegen for each module
+    plan_job(fib_module,    Job.CODEGEN);
+    plan_job(raylib_module, Job.CODEGEN);
+    plan_job(poly_module,   Job.CODEGEN);
 }
-
-#import "meta.rok";
-  </code></pre>
-    <p class="placeholder">
-    Currently in a private repository; planned public release: late October – early November.
-    </p>
-    <p class="placeholder">Demo video/GIF will go here soon</p>
+    </code></pre>
   </div>
+
+  <p class="placeholder">
+    Currently in a private repository; planned public release in November.
+  </p>
+  <p class="placeholder">Demo video/GIF will go here soon</p>
 </div>
 
 <div class="project">
