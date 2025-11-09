@@ -48,6 +48,10 @@ Prism.languages.brik = {
 </script>
 
 <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Apple SF Pro font */
   body {
     font-family: "SF Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -106,6 +110,12 @@ Prism.languages.brik = {
 
   section {
     margin-bottom: 3em;
+  }
+
+  .anchor-link {
+    text-decoration: none;
+    color: inherit;
+    margin-left: 8px;
   }
 
   /* Project section — completely flat, no shadows, no rounded corners */
@@ -228,7 +238,9 @@ Prism.languages.brik = {
 <hr>
 
 <section id="about-me">
-  <h2>About Me</h2>
+  <h2 id="about-me">
+    <a href="#about-me" class="anchor-link">About Me</a>
+  </h2>
   <p>
     I’m a self-taught 16-year-old systems programmer and compiler enthusiast, focused on low-level programming and high-quality, high-performance software. I care deeply about the performance, simplicity, and maintainability of my software, I believe it's too important for us to be sloppy about it.
   </p>
@@ -249,8 +261,10 @@ Prism.languages.brik = {
 
 <hr>
 
-<section id="projects">
-<h2>Highlight Projects</h2>
+<section id="highlight-projects">
+<h2>
+  <a href="#highlight-projects" class="anchor-link">Highlight Projects</a>
+</h2>
 
 <div class="project">
   <h3>
@@ -406,34 +420,44 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       Demonstrates some basic generic array operations using compound parameter types.
     </p>
     <pre><code class="language-rust">
-array_index   :: (arr: [] $T, index: i32)           -> T    { return arr[index]; }
-array_set     :: (arr: [] $T, index: i32, value: T) -> void { arr[index] = value; }
-array_clear   :: (arr: [] $T) { memset(arr.data, 0, sizeof(T) * arr.len); }
+/*
+    Demonstrates basic use of polymorphic array utilities.
+    @Note: idiomatic array handling in Rok is typically done through
+    built-in iteration or standard library helpers.
+*/
+
+array_index :: (arr: [] $T, index: i32)           -> T    { return arr[index]; }
+array_set   :: (arr: [] $T, index: i32, value: T) -> void { arr[index] = value; }
+array_clear :: (arr: [] $T) { memset(arr.data, 0, sizeof(T) * arr.len); }
 
 main :: () {
-    int_array_showcase();
+    i32_array_showcase();
     float_array_showcase();
 }
 
-int_array_showcase :: () {
-    int_arr : [10] i32;
+i32_array_showcase :: () {
+    i32_arr : [10] i32;
 
-    for 0..10 array_set(int_arr, it, 100 * it);
+    print("---- int array ----\n");
 
-    array_set(int_arr, 0, 1337);
+    for 0..10 array_set(i32_arr, it, 100 * it);
+    array_set(i32_arr, 0, 1337);
 
-    for 0..10 print("int_arr[%] = %\n", it, array_index(int_arr, it));
+    for 0..10 print("i32_arr[%] = %\n", it, array_index(i32_arr, it));
 
-    array_clear(int_arr);
+    array_clear(i32_arr);
     print("array cleared.\n");
 
-    for int_arr print("[int] it = %\n", it);
+    for i32_arr print("[int] it = %\n", it);
 }
 
-float_array_showcase :: () {
-    float_arr : [10] f32;
-    for 0..10 array_set(float_arr, it, 100.0 * it as f32);
-    for float_arr print("[float] it = %\n", it);
+f32_array_showcase :: () {
+    f32_arr : [10] f32;
+
+    print("---- float array ----\n");
+
+    for 0..10 array_set(f32_arr, it, 100.0 * it as f32);
+    for f32_arr print("[f32] it = %\n", it);
 }
 
 #import "std.rok";
@@ -860,7 +884,10 @@ build clean:
 </section>
 
 <section id="other-projects">
-  <h2>Other Projects</h2>
+  <h2>
+    <a href="#other-projects" class="anchor-link">Other projects</a>
+  </h2>
+
   <ul>
     <li><strong><a href="https://github.com/rakivo/raylib-wasm" target="_blank">raylib-WASM</a>:</strong> A Rust crate that allows seamless execution of your Raylib games in-browser via pure WASM (no Emscripten) as well as natively. Implements a subset of raylib; Contributions welcome - submit a PR to extend raylib coverage.</li>
     <li><strong><a href="https://github.com/rakivo/vmz" target="_blank">vmz</a>:</strong> An experimental stack-based virtual machine written in Zig, with its own assembly-like language that can be compiled to NASM.</li>
@@ -871,7 +898,10 @@ build clean:
 </section>
 
 <section id="skills">
-  <h2>Skills</h2>
+  <h2>
+    <a href="#skills" class="anchor-link">Skills</a>
+  </h2>
+
   <ul>
     <li>Expert in Rust, C/C++, Zig, and low-level systems programming.</li>
     <li>Designed and implemented multiple compilers and virtual machines.</li>
@@ -883,7 +913,9 @@ build clean:
 
 <hr>
 
-<h2>Other Achievements</h2>
+<h2>
+  <a href="#other-achievements" class="anchor-link">Other Achievements</a>
+</h2>
 <ul>
   <li>400+ <a href="https://leetcode.com/marktyrkba" target="_blank">LeetCode</a> problems solved; 1602 contest rating</li>
   <li>Placed top-3 in regional programming olympiads</li>
@@ -892,7 +924,9 @@ build clean:
 <hr>
 
 <section id="demo-media">
-<h2>Demo / Media</h2>
+<h2>
+  <a href="#demo-media" class="anchor-link">Demo / Media</a>
+</h2>
 <p class="placeholder">
 This section will soon showcase demo videos, screenshots, GIFs, and other project media...
 </p>
@@ -901,7 +935,9 @@ This section will soon showcase demo videos, screenshots, GIFs, and other projec
 <hr>
 
 <section id="contact">
-  <h2>Contact</h2>
+  <h2>
+    <a href="#contact" class="anchor-link">Contact</a>
+  </h2>
   <ul>
     <li><strong>Email:</strong> <a href="mailto:marktyrkba456@gmail.com">marktyrkba456@gmail.com</a></li>
     <li><strong>GitHub:</strong> <a href="https://github.com/rakivo" target="_blank">rakivo</a></li>
@@ -910,6 +946,76 @@ This section will soon showcase demo videos, screenshots, GIFs, and other projec
 </section>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // --- smooth scroll on load if there's a hash ---
+  if (window.location.hash) {
+    const targetId = window.location.hash.slice(1);
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      // prevent browser's default instant jump
+      window.scrollTo(0, 0);
+      // then smooth scroll
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150); // short delay to ensure layout is ready
+    }
+  }
+
+  // --- your anchor link copy behavior (no change) ---
+  document.querySelectorAll('.anchor-link').forEach(link => {
+    link.addEventListener('click', async e => {
+      const href = link.getAttribute('href');
+      const targetId = href.startsWith('#') ? href.slice(1) : null;
+      const targetEl = targetId ? document.getElementById(targetId) : null;
+
+      if (targetEl) {
+        e.preventDefault();
+        window.history.pushState(null, '', href);
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      const url = `${window.location.origin}${window.location.pathname}${href}`;
+      try { await navigator.clipboard.writeText(url); } catch {}
+
+      const toast = document.createElement('div');
+      toast.textContent = 'Link copied';
+      Object.assign(toast.style, {
+        position: 'absolute',
+        padding: '6px 10px',
+        background: 'rgba(60, 60, 60, 0.9)',
+        color: '#fff',
+        fontSize: '12px',
+        borderRadius: '8px',
+        backdropFilter: 'blur(6px)',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+        opacity: '0',
+        transform: 'scale(0.95) translateY(-6px)',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        zIndex: '9999'
+      });
+
+      document.body.appendChild(toast);
+      const linkRect = link.getBoundingClientRect();
+      const top = window.scrollY + linkRect.top - 30;
+      const left = window.scrollX + linkRect.left + linkRect.width / 2;
+      requestAnimationFrame(() => {
+        const width = toast.offsetWidth;
+        toast.style.left = `${left - width / 2}px`;
+        toast.style.top = `${top}px`;
+        toast.style.opacity = '1';
+        toast.style.transform = 'scale(1) translateY(-10px)';
+      });
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'scale(0.95) translateY(-6px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 1500);
+    });
+  });
+});
+
 document.querySelectorAll('.demo-video').forEach(video => {
   video.addEventListener('click', () => {
     if (video.requestFullscreen) {
