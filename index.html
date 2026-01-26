@@ -249,7 +249,7 @@ Prism.languages.brik = {
     My work includes compilers, virtual machines, custom SSA-based IRs, bytecode formats, and other performance-critical applications—but if you think about it, what program's performance isn't critical?
   <p>
   <p>
-    Every project starts with understanding how everything works from the ground up. As Andrew Kelley puts it, systems programming means diving deep, really understanding the machine, the memory, the constraints. No abstractions you don't control, no magic you can't explain. 
+    Every project starts with understanding how everything works from the ground up. As Andrew Kelley puts it, systems programming means diving deep, really understanding the machine, the memory, the constraints. No abstractions you don't control, no magic you can't explain.
   </p>
   <p>
     The poor state of software today is what drives this work. As Jonathan Blow once said, <em>"I think we're now in a situation where everybody in the world is flooded with low quality software, and everybody wishes that they had higher quality software."</em> Too much of today's software is built with low standards.
@@ -271,12 +271,16 @@ Prism.languages.brik = {
     1. The
     <a href="https://github.com/rakivo/rok" target="_blank" rel="noopener noreferrer" class="project-link">
       rok
-    </a> language Compiler <span class="subtitle">planned public release in December 2025 - January 2026.</span>
+    </a> language Compiler <span class="subtitle">planned public release in H1 2026.</span>
   </h3>
   <p>
-    A compiler written in Rust, completely from scratch, fully parallelized, with its own SSA IR, Bytecode, Polymorph solver, and a Register Machine.
-    With focus on meta-programming: all user-written code can execute at compile time and communicate with the compiler.
+      A compiler written in Rust from completely scratch, featuring custom SSA IR, bytecode, type inference,
+polymorph solver, register machine, and an extremely flexible pipeline for insane meta-programming.
   </p>
+
+  <p>
+      Every single piece of user code can execute at compile time and communicate with the compiler with NO exceptions.
+  <p>
 
   <!-- Fib Meta-Programming Demo -->
   <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Fib Compile-Time Demo</div>
@@ -286,27 +290,25 @@ Prism.languages.brik = {
     </p>
     <pre><code class="language-rust">
 fib :: (n: i64) -> i64 {
+    if n == 0 return 0;
+    if n == 1 return 1;
+
     a := 0;
     b := 1;
 
-    if n == 0 return a;
-    if n == 1 return b;
-
     for 2..n+1 {
         c := a + b;
-        a = b;
-        b = c;
+        a = b; b = c;
     }
 
     return b;
 }
 
-main :: () {
+#run {
     N :: 77;
-    print("fib(%) = %\n", N, fib(N));
-}
 
-#run main(); // runs at compile time, prints: fib(77) = 5527939700884757
+    assert_eq(fib(N), 5_527_939_700_884_757);
+};
 
 #import "std.rok";
     </code></pre>
@@ -319,19 +321,12 @@ main :: () {
       A basic graphics example using Raylib. Demonstrates 2D transformations, shaders, etc.
     </p>
     <pre><code class="language-rust">
-rotate :: (p: Vector2, theta: f32) -> Vector2 {
-    return vec2(
-        p.x * cosf(theta) - p.y * sinf(theta),
-        p.x * sinf(theta) + p.y * cosf(theta)
-    );
-}
-
 main :: () {
     SetTargetFPS(60);
-    InitWindow(WINDOW_WIDTH as i32, WINDOW_HEIGHT as i32, WINDOW_TITLE.data);
+    InitWindow(WINDOW_WIDTH as _, WINDOW_HEIGHT as _, "hello from rok!");
     defer CloseWindow();
 
-    font := LoadFontEx(c"font.ttf".data, FONT_SIZE as i32, null, 0);
+    font := LoadFontEx(c"font.ttf", FONT_SIZE as i32, null, 0);
     defer UnloadFont(font);
 
     center := vec2(WINDOW_WIDTH / 2.0, WINDOW_WIDTH / 2.0);
@@ -341,11 +336,11 @@ main :: () {
     shader := LoadShaderFromMemory(null, SHADER.data);
     defer UnloadShader(shader);
 
-    time_loc := GetShaderLocation(shader, c"time".data);
-    resolution_loc := GetShaderLocation(shader, c"resolution".data);
+    time_loc := GetShaderLocation(shader, c"time");
+    resolution_loc := GetShaderLocation(shader, c"resolution");
 
     resolution := vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
-    SetShaderValue(shader, resolution_loc, *resolution, ShaderUniformDataType.VEC2);
+    SetShaderValue(shader, resolution_loc, *resolution, .VEC2);
 
     text_size := MeasureTextEx(font, TEXT.data, FONT_SIZE, TEXT_SPACING);
 
@@ -357,22 +352,22 @@ main :: () {
     while !WindowShouldClose() {
         angle += 0.02; // radians per frame
 
-        v1 := vec2(0.0, -size);               // top
+        v1 := vec2(y=-size);        // top
         v2 := vec2(-size / 2.0, size / 2.0);  // bottom left
-        v3 := vec2(size / 2.0, size / 2.0);   // bottom right
+        v3 := vec2(size / 2.0,  size / 2.0);  // bottom right
 
         rv1 := rotate(v1, angle);
         rv2 := rotate(v2, angle);
         rv3 := rotate(v3, angle);
 
-        color := Color {
-            r = ((sinf(angle)          * 0.05  + 0.50) * 255.0) as u8,
-            g = ((sinf(angle + 2.0944) * 0.05  + 0.50) * 255.0) as u8,
-            b = ((sinf(angle + 4.1888) * 0.05  + 0.50) * 255.0) as u8,
-            a = ((sinf(angle * 2.0)    * 0.25  + 0.75) * 255.0) as u8
+        color := Color.{
+            r = ((sinf(angle)          * 0.05  + 0.50) * 255.0) as _,
+            g = ((sinf(angle + 2.0944) * 0.05  + 0.50) * 255.0) as _,
+            b = ((sinf(angle + 4.1888) * 0.05  + 0.50) * 255.0) as _,
+            a = ((sinf(angle * 2.0)    * 0.25  + 0.75) * 255.0) as _,
         };
 
-        SetShaderValue(shader, time_loc, *angle, ShaderUniformDataType.FLOAT);
+        SetShaderValue(shader, time_loc, *angle, .FLOAT);
 
         BeginDrawing();
         defer EndDrawing();
@@ -393,9 +388,12 @@ main :: () {
     }
 }
 
-#import "std.rok";
-#import "math.rok";
-#import "raylib.rok";
+rotate :: (p: Vector2, theta: f32) -> Vector2 {
+    return vec2(
+        p.x * cosf(theta) - p.y * sinf(theta),
+        p.x * sinf(theta) + p.y * cosf(theta)
+    );
+}
 
 FONT_SIZE :: 75.0;
 TEXT_SPACING :: 2.0;
@@ -410,92 +408,172 @@ BACKGROUND_COLOR :: Color { r = 24, g = 24, b = 24, .. };
 TEXT :: c"hello from rok";
 
 SHADER :: c"... [full demo soon in the language's repository] ...";
+
+#import "std.rok";
+#import "math.rok";
+#import "raylib.rok";
     </code></pre>
   </div>
 
-  <!-- Array Generics Demo -->
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Array Generics (Poly) Demo</div>
+  <!-- Dynamic Arrays & String Builder Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Dynamic Arrays & String Builder Demo</div>
   <div class="content">
     <p>
-      Demonstrates some basic generic array operations using compound parameter types.
+      Demonstrates Dynamic arrays with automatic growth, insertion, and removal operations.
+      String builders with type-aware formatting and printf-style syntax.
+      All powered by compile-time generics that specialize for each type.
     </p>
     <pre><code class="language-rust">
-/*
-    Demonstrates basic use of polymorphic array utilities.
-    @Note: idiomatic array handling in Rok is typically done through
-    built-in iteration or standard library helpers.
-*/
+  /*
+     Demonstrates basic features like:
+     Dynamic arrays with automatic growth, compile-time generics that work on any type,
+     and string builders with type-aware formatting.
+  */
 
-array_index :: (arr: [] $T, index: i32)           -> T    { return arr[index]; }
-array_set   :: (arr: [] $T, index: i32, value: T) -> void { arr[index] = value; }
-array_clear :: (arr: [] $T) { memset(arr.data, 0, sizeof(T) * arr.len); }
+  // Compile-time polymorphic functions work on any type T
+  array_add :: (arr: *[..] $T, value: T) {
+      new_len := arr.len + 1;
+      array_ensure_capacity(arr, new_len);  // Auto-grows with 2x strategy
 
-main :: () {
-    i32_array_showcase();
-    float_array_showcase();
-}
+      ptr: *T = arr.data + (arr.len * size_of(T));
+      ptr.* = value;
+      arr.len = new_len;
+  }
 
-i32_array_showcase :: () {
-    i32_arr : [10] i32;
+  // Safe removal returns both value and success status
+  array_remove :: (arr: *[..] $T, index: u64) -> T, bool {
+      ret : T;
+      if index >= arr.len return ret, false;
 
-    print("---- int array ----\n");
+      size :: size_of(T);
+      ptr : *T = arr.data + (index * size);
+      ret = ptr.*;
 
-    for 0..10 array_set(i32_arr, it, 100 * it);
-    array_set(i32_arr, 0, 1337);
+      // Shift elements to maintain order
+      count := arr.len - index - 1;
+      if count > 0 memmove(ptr, ptr + size, count * size);
 
-    for 0..10 print("i32_arr[%] = %\n", it, array_index(i32_arr, it));
+      arr.len -= 1;
+      return ret, true;
+  }
 
-    array_clear(i32_arr);
-    print("array cleared.\n");
+  // String builder uses dynamic array internally
+  String_Builder :: struct {
+      inner: [..] u8;
+  }
 
-    for i32_arr print("[int] it = %\n", it);
-}
+  // Overloaded append functions for different types
+  sb_append :: (sb: *String_Builder, n: i32)    { sb_append_integer(sb, n); }
+  sb_append :: (sb: *String_Builder, n: f64)    { sb_append_float(sb, n); }
+  sb_append :: (sb: *String_Builder, s: string) { sb_append_string(sb, s); }
+  // ...
 
-f32_array_showcase :: () {
-    f32_arr : [10] f32;
+  // Printf-style formatting with variadic Any
+  sb_print :: (sb: *String_Builder, fmt: string, args: ..Any) {
+      i := 0;
+      arg_index := 0;
+      while i < fmt.len {
+          if fmt[i] == '%' && i + 1 < fmt.len && fmt[i + 1] != '%' {
+              if arg_index < args.len {
+                  sb_append_any(sb, args[arg_index]);  // Type-dispatched at runtime, using type reflection.
+                  arg_index += 1;
+              }
+              i += 1;
+          } else {
+              sb_append_byte(sb, fmt[i]);
+              i += 1;
+          }
+      }
+  }
 
-    print("---- float array ----\n");
+  string_builder_showcase :: () {
+      print("---- String Builder ----\n");
 
-    for 0..10 array_set(f32_arr, it, 100.0 * it as f32);
-    for f32_arr print("[f32] it = %\n", it);
-}
+      sb: String_Builder;
+      defer sb_free(*sb);
+
+      // Append different types naturally
+      sb_append(*sb, "Temperature: ");
+      sb_append(*sb, 98.6);
+      sb_append(*sb, "°F, Status: ");
+      sb_append(*sb, true);
+      sb_append(*sb, "\n");
+
+      // Printf-style formatting
+      sb_print(*sb, "User % scored % points\n", "Alice", 1337);
+
+      // Build from integer directly
+      score_str := sb_from_integer(9001);
+      defer sb_free(*score_str);
+
+      sb_append(*sb, "Power level: ");
+      sb_append(*sb, sb_to_string(*score_str));
+
+      result := sb_to_string(*sb);
+      print("%", result);
+  }
+
+  dynamic_array_showcase :: () {
+      print("---- Dynamic Arrays ----\n");
+
+      // Create and populate
+      numbers: [..] i32;
+      defer array_free(*numbers);
+      for 0..5 array_add(*numbers, it * 10);
+
+      // Insert in middle
+      array_insert(*numbers, 2, 999);
+
+      // Safe access with bounds checking
+      ptr := array_get(*numbers, 2);
+      if ptr  print("Element at index 2: %\n", ptr.*);
+
+      // Remove and get value
+      val, ok := array_remove(*numbers, 2);
+      if ok  print("Removed: %\n", val);
+
+      // Swap-remove (O(1) but changes order)
+      array_swap_remove(*numbers, 0);
+
+      print("Final array: ");
+      for numbers print("% ", it);
+      print("\n");
+  }
+
+  main :: () {
+      dynamic_array_showcase();
+      string_builder_showcase();
+  }
+
+  #import "std.rok";
+    </code></pre>
+  </div>
+
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Build meta-programming demo</div>
+  <div class="content">
+    <p>
+      A meta-program that runs at compile-time, registers and manages build options to compile the raylib demo from above.
+    </p>
+    <pre><code class="language-rust">
+#run {
+    opts : Build_Options;
+
+    opts.do_output = false;
+    array_add(*opts.build_files, "examples/triangle.rok");
+    array_add(*opts.link_libs, "raylib");
+    array_add(*opts.link_libs, "m");
+
+    ok := set_build_options(*opts);
+
+    if !ok panic("couldn't set build options!! exiting..\n");
+};
 
 #import "std.rok";
     </code></pre>
   </div>
 
-  <!-- Basic Polymorphic Math Demo -->
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Build meta-programming demo</div>
-  <div class="content">
-    <p>
-      A meta-program that registers all demo modules and schedules code generation for them. Demonstrates Rok's compile-time build orchestration.
-    </p>
-    <pre><code class="language-rust">
-fib_demo_path    :: "examples/fib-demo.rok";
-raylib_demo_path :: "examples/raylib-demo.rok";
-poly_demo_path   :: "examples/poly-demo.rok";
-
-#run build();
-
-build :: () {
-    // Prevent this module itself from being output
-    dont_output_this_module();
-
-    // Register modules
-    fib_module    := register_module(fib_demo_path);
-    raylib_module := register_module(raylib_demo_path);
-    poly_module   := register_module(poly_demo_path);
-
-    // Schedule codegen for each module
-    plan_job(fib_module,    Job.CODEGEN);
-    plan_job(raylib_module, Job.CODEGEN);
-    plan_job(poly_module,   Job.CODEGEN);
-}
-    </code></pre>
-  </div>
-
   <p class="placeholder">
-    Currently in a private repository; planned public release in December 2025 - January 2026.
+    Currently in a private repository; planned public release in H1 2026.
   </p>
   <p class="placeholder">Demo video/GIF will go here soon</p>
 </div>
