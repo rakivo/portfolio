@@ -24,25 +24,18 @@ Prism.languages.ninja = {
 };
 Prism.languages.brik = {
   'comment': /;.*/,
-
   'keyword': /\b(?:text|rodata|data|bss|section|extern|extrn|global|globl|space|string|stringzj|ascii|asciiz|include|word|hword)\b/i,
-
   'number': /\b(?:0x[a-fA-F0-9]+|\d+)\b/,
-
   'operator': /[+\-*/=<>!&|]/,
-
   'punctuation': /[:,]/,
-
   'label': {
     pattern: /^[a-zA-Z_]\w*(?=:)/m,
     alias: 'function'
   },
-
   'directive': {
     pattern: /^\s*\.\w+/m,
     alias: 'keyword'
   },
-
   'string': /"(?:\\.|[^"\\])*"/
 };
 </script>
@@ -52,7 +45,6 @@ Prism.languages.brik = {
     scroll-behavior: smooth;
   }
 
-  /* Apple SF Pro font */
   body {
     font-family: "SF Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #f5f5f7;
@@ -118,10 +110,9 @@ Prism.languages.brik = {
     margin-left: 8px;
   }
 
-  /* Project section — completely flat, no shadows, no rounded corners */
   .project {
     margin-bottom: 2em;
-    padding: 0; /* no padding around the container */
+    padding: 0;
     border-bottom: 1px solid #d1d1d6;
   }
 
@@ -134,12 +125,11 @@ Prism.languages.brik = {
     color: #0051a8;
   }
 
-  /* Toggle button as a flat inline control */
   .toggle-button {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
-    color: #1c1c1e; /* same as text */
+    color: #1c1c1e;
     font-weight: 500;
     font-size: 0.95em;
     user-select: none;
@@ -147,7 +137,7 @@ Prism.languages.brik = {
   }
 
   .toggle-button::before {
-    content: "▶"; /* right-pointing triangle */
+    content: "▶";
     display: inline-block;
     margin-right: 0.4em;
     transition: transform 0.3s ease;
@@ -155,7 +145,7 @@ Prism.languages.brik = {
   }
 
   .toggle-button.open::before {
-    transform: rotate(90deg); /* points down when open */
+    transform: rotate(90deg);
   }
 
   .demo-video {
@@ -163,7 +153,7 @@ Prism.languages.brik = {
     max-width: 890px;
     height: auto;
     display: block;
-    margin: 0 auto; /* centers it */
+    margin: 0 auto;
   }
 
   .content {
@@ -178,8 +168,8 @@ Prism.languages.brik = {
   }
 
   .project-link {
-    color: #007aff;      /* Apple-style accent color */
-    font-weight: 600;    /* slightly bolder */
+    color: #007aff;
+    font-weight: 600;
     text-decoration: none;
   }
 
@@ -187,7 +177,6 @@ Prism.languages.brik = {
     text-decoration: underline;
   }
 
-  /* Remove default list styling */
   ul, ol {
       list-style: none;
       padding-left: 0;
@@ -203,9 +192,9 @@ Prism.languages.brik = {
   }
 
   .subtitle {
-    color: #8e8e93; /* gray color */
-    font-weight: normal; /* optional: make it lighter than the h3 */
-    font-size: 0.9em;  /* optional: slightly smaller */
+    color: #8e8e93;
+    font-weight: normal;
+    font-size: 0.9em;
   }
 
   #about-me p {
@@ -213,7 +202,7 @@ Prism.languages.brik = {
   }
 
   pre {
-    background: #f5f5f7; /* flat, same as page */
+    background: #f5f5f7;
     padding: 1em 0;
     font-family: "SF Mono", monospace;
     overflow-x: auto;
@@ -228,7 +217,7 @@ Prism.languages.brik = {
 
   .video-wrapper {
     position: relative;
-    padding-top: 56.25%; /* 16:9 */
+    padding-top: 56.25%;
   }
   .video-wrapper iframe {
     position: absolute;
@@ -254,25 +243,33 @@ Prism.languages.brik = {
     <a href="#about-me" class="anchor-link">About Me</a>
   </h2>
   <p>
-    I'm a self-taught 16-year-old systems programmer and compiler enthusiast building low-level, high-performance software.
+    I'm a self-taught 17-year-old systems programmer and compiler enthusiast building low-level, high-performance software.
   </p>
   <p>
-    My work includes compilers, virtual machines, custom SSA-based IRs, bytecode formats,
+    My work includes compilers, virtual machines, custom SSA-based IRs, bytecode formats, version control systems,
 
     <a href="https://github.com/rakivo/rawgrep" target="_blank" rel="noopener noreferrer" class="project-link">
       fastest greps in the world
     </a>
 
-    and other performance-critical applications—but really, if you think about it, what program's performance isn't critical?
+    and other performance-critical applications — but really, if you think about it, what program's performance isn't critical?
   <p>
   <p>
-    Every project starts with understanding how everything works from the ground up. As Andrew Kelley puts it, systems programming means diving deep, really understanding the machine, the memory, the constraints. No abstractions you don't control, no magic you can't explain.
+    In a world of people never diving deep and performance being treated as an optional feature, I will always try my absolute best
+    to make my programs as fast as I can — with the defaults being as intuitive as possible while keeping the program easy to download
+    and/or compile from scratch. Of course, I'm nowhere near as skilled as people like Jonathan Blow,
+    Casey Muratori, Shawn Barrett, Alan Webster, Vjekoslav Krajačić and other absolutely legendary engineers but I do and I will continue
+    doing everything I can to one day be as knowledgeable and experienced as them.
+  </p>
+    The poor state of software today is what drives this work. Every day I use modern software I encounter more and more bugs
+    — it's devastating how far quality standards have fallen in this industry. Thousands of people AI-generating their programs just to pollute
+    the internet with even more buggy and unstable software.
+
+    But I hope that in contrast, genuinely high quality software will become more and more noticeable.
+    A good example of that is File Pilot — people were shocked that it's a single 2MB executable, and how fast and snappy it feels.
   </p>
   <p>
-    The poor state of software today is what drives this work. As Jonathan Blow once said, <em>"I think we're now in a situation where everybody in the world is flooded with low quality software, and everybody wishes that they had higher quality software."</em> Too much of today's software is built with low standards.
-  </p>
-  <p>
-    My goal is to make it easier to write high-quality software—and eventually, to help others do the same.
+    Make software great again!
   </p>
 </section>
 
@@ -299,136 +296,234 @@ polymorph solver, register machine, and an extremely flexible pipeline for insan
       Every single piece of user code can execute at compile time and communicate with the compiler with NO exceptions.
   <p>
 
-  <!-- Fib Meta-Programming Demo -->
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Fib Compile-Time Demo</div>
+  <!-- ValuePool Demo -->
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide ValuePool — Compile-Time Generic Memory Pool</div>
   <div class="content">
     <p>
-      A basic program that calculates Fibonacci numbers at compile-time.
+      A compile-time generic memory pool for storing lists of any type <code>T</code>.
+      Uses a handle-based API for indirection, power-of-two capacity rounding,
+      and interprets raw memory slots as <code>u32</code> length headers — all resolved at compile time via rok's polymorph solver.
     </p>
     <pre><code class="language-rust">
-fib :: (n: i64) -> i64 {
-    if n == 0 return 0;
-    if n == 1 return 1;
+INVALID_HANDLE : u32 : 0xFFFFFFFF;
 
-    a := 0;
-    b := 1;
-
-    for 2..n+1 {
-        c := a + b;
-        a = b; b = c;
-    }
-
-    return b;
+// A lightweight handle into a ValuePool — just a u32 index.
+// Parameterized on T for type safety at compile time.
+EntityList :: struct (T: Type) {
+    handle: u32;
 }
 
-#run {
-    N :: 77;
+// A memory pool for storing lists of T.
+// Layout per allocation: [length_as_T, elem0, elem1, ..., padding to next power of 2]
+ValuePool :: struct (T: Type) {
+    data: [..] T;
+}
 
-    assert_eq(fib(N), 5_527_939_700_884_757);
-};
+// Allocate a new list inside the pool, returns a typed handle.
+alloc_list :: (pool: *ValuePool($T), elements: [] T) -> EntityList(T) {
+    #if size_of(T) < size_of(u32)
+        #run panic("size_of(T) in ValuePool(T) must be >= 4 bytes!");
+
+    count    := elements.len as u32;
+    needed   := 1 + count;
+    capacity := next_power_of_two(needed);
+
+    // The handle points just past the length slot
+    element_start := (pool.data.len + 1) as u32;
+
+    array_ensure_capacity(*pool.data, pool.data.len + capacity as _);
+
+    // Write the element count by reinterpreting the next T slot as *u32
+    length_ptr := *pool.data[pool.data.len] as *u32;
+    length_ptr.* = count;
+    pool.data.len += 1;
+
+    for elements  array_add(*pool.data, it);
+
+    // Pad to power-of-two boundary
+    zero: T;
+    for 0..capacity - needed  array_add(*pool.data, zero);
+
+    return EntityList(T).{ handle = element_start };
+}
+
+// Retrieve a slice view into the pool — zero-copy, no allocation.
+get_list :: (pool: *ValuePool($T), list: EntityList(T)) -> [] T {
+    if list.handle == INVALID_HANDLE  return .{};
+
+    length_ptr := *pool.data[list.handle - 1] as *u32;
+
+    result: [] T;
+    result.data = *pool.data[list.handle] as *T;
+    result.len  = length_ptr.* as _;
+    return result;
+}
+
+main :: () {
+    pool: ValuePool(u32);
+    defer free_pool(*pool);
+
+    list := alloc_list(*pool, u32.[10, 20, 30, 40, 50]);
+
+    values := get_list(*pool, list);
+    for values  print("  %\n", it);
+}
 
 #import "std.rok";
     </code></pre>
   </div>
 
   <!-- Raylib Demo -->
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Raylib Demo</div>
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Asteroids — Raylib Demo</div>
   <div class="content">
     <p>
-      A basic graphics example using Raylib. Demonstrates 2D transformations, shaders, etc.
+      A full Asteroids game written in rok using Raylib — entities, particles, collisions, audio, and a game loop, all in rok's syntax.
+      Below are the most interesting excerpts.
     </p>
+    <p>Structs & constants — typed, zero-init, enum tiers:</p>
     <pre><code class="language-rust">
-main :: () {
-    SetTargetFPS(60);
-    InitWindow(WINDOW_WIDTH as _, WINDOW_HEIGHT as _, "hello from rok!");
-    defer CloseWindow();
+Asteroid_Tier :: enum {
+    LARGE :: 0;
+    MED   :: 1;
+    SMALL :: 2;
+}
 
-    font := LoadFontEx(c"font.ttf", FONT_SIZE as i32, null, 0);
-    defer UnloadFont(font);
+Player :: struct {
+    pos := #run vec2(SCREEN_W / 2.0, SCREEN_H / 2.0);
+    vel: Vector2;
+    angle := 0.0;
+    alive := true;
+}
 
-    center := vec2(WINDOW_WIDTH / 2.0, WINDOW_WIDTH / 2.0);
-    size   := WINDOW_HEIGHT * 0.45;
-    angle  := 0.0;
+Asteroid :: struct {
+    pos:    Vector2;
+    vel:    Vector2;
+    radius: f32;
+    tier:   Asteroid_Tier;
+    seed:   u64;
+}
 
-    shader := LoadShaderFromMemory(null, SHADER.data);
-    defer UnloadShader(shader);
+ExplosionParticle :: struct {
+    pos:      Vector2;
+    vel:      Vector2;
+    life:     f32;
+    max_life: f32;
+    size:     f32;
+}
 
-    time_loc := GetShaderLocation(shader, c"time");
-    resolution_loc := GetShaderLocation(shader, c"resolution");
+COLOR_BG       :: Color.{ r = 12,  g = 12,  b = 22  };
+COLOR_PLAYER   :: Color.{ r = 220, g = 230, b = 255 };
+COLOR_THRUST   :: Color.{ r = 255, g = 180, b = 60  };
+COLOR_GAMEOVER :: Color.{ r = 255, g = 80,  b = 80  };
+    </code></pre>
 
-    resolution := vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
-    SetShaderValue(shader, resolution_loc, *resolution, .VEC2);
+    <p>Explosion emitter — per-tier particle burst with randomized speed, life, and size:</p>
+    <pre><code class="language-rust">
+emit_explosion :: (particles: *[..] ExplosionParticle, pos: Vector2, tier: Asteroid_Tier, rng: *u64) {
+    count: i32;
+    life:  f32;
+    speed: f32;
 
-    text_size := MeasureTextEx(font, TEXT.data, FONT_SIZE, TEXT_SPACING);
+    if      tier == .LARGE { count = 45; life = 1.1;  speed = 280.0; }
+    else if tier == .MED   { count = 28; life = 0.85; speed = 200.0; }
+    else                   { count = 16; life = 0.6;  speed = 140.0; }
 
-    text_center := vec2(
-        WINDOW_WIDTH  / 2.0 - text_size.x / 2.0,
-        WINDOW_HEIGHT / 2.0 - text_size.y / 2.0
-    );
+    for i: 0..count {
+        angle  := rand_range(rng, 0.0, PI * 2.0);
+        spd    := rand_range(rng, speed * 0.25, speed);
+        life_j := rand_range(rng, life * 0.6, life);
+        size   := rand_range(rng, 2.5, 6.5);
 
-    while !WindowShouldClose() {
-        angle += 0.02; // radians per frame
-
-        v1 := vec2(y=-size);        // top
-        v2 := vec2(-size / 2.0, size / 2.0);  // bottom left
-        v3 := vec2(size / 2.0,  size / 2.0);  // bottom right
-
-        rv1 := rotate(v1, angle);
-        rv2 := rotate(v2, angle);
-        rv3 := rotate(v3, angle);
-
-        color := Color.{
-            r = ((sinf(angle)          * 0.05  + 0.50) * 255.0) as _,
-            g = ((sinf(angle + 2.0944) * 0.05  + 0.50) * 255.0) as _,
-            b = ((sinf(angle + 4.1888) * 0.05  + 0.50) * 255.0) as _,
-            a = ((sinf(angle * 2.0)    * 0.25  + 0.75) * 255.0) as _,
-        };
-
-        SetShaderValue(shader, time_loc, *angle, .FLOAT);
-
-        BeginDrawing();
-        defer EndDrawing();
-
-        ClearBackground(BACKGROUND_COLOR);
-
-        DrawTextEx(font, TEXT.data, text_center, FONT_SIZE, TEXT_SPACING, TEXT_COLOR);
-
-        BeginShaderMode(shader);
-        defer EndShaderMode();
-
-        DrawTriangle(
-            vec2(center.x + rv1.x, center.y + rv1.y),
-            vec2(center.x + rv2.x, center.y + rv2.y),
-            vec2(center.x + rv3.x, center.y + rv3.y),
-            color
-        );
+        array_add(particles, .{
+            pos      = pos,
+            vel      = vec2(cosf(angle) * spd, sinf(angle) * spd),
+            life     = life_j,
+            max_life = life_j,
+            size     = size
+        });
     }
 }
+    </code></pre>
 
-rotate :: (p: Vector2, theta: f32) -> Vector2 {
-    return vec2(
-        p.x * cosf(theta) - p.y * sinf(theta),
-        p.x * sinf(theta) + p.y * cosf(theta)
-    );
+    <p>Explosion draw — fire-to-white color animation driven by <code>life / max_life</code>:</p>
+    <pre><code class="language-rust">
+draw_explosion_particles :: (particles: *[..] ExplosionParticle) {
+    for * particles {
+        frac  := it.life / it.max_life;
+        alpha := (frac * 255.0) as u8;
+
+        r: u8 = 255;
+        g: u8 = 0;
+        b: u8 = 0;
+
+        if frac > 0.7 {
+            t := (frac - 0.7) / 0.3;
+            g = (255.0 * t) as u8;
+            b = (240.0 * t) as u8;
+        } else if frac > 0.4 {
+            t := (frac - 0.4) / 0.3;
+            g = (220.0 * t + 80.0 * (1.0 - t)) as u8;
+        } else {
+            t := frac / 0.4;
+            g = (80.0 * t) as u8;
+        }
+
+        color := Color.{ r = r, g = g, b = b, a = alpha };
+        DrawCircleV(it.pos, it.size * frac, color);
+
+        if frac > 0.5 {
+            glow_alpha := ((frac - 0.5) * 2.0 * 100.0) as u8;
+            glow_color := .{ r = 255, g = 200, b = 80, a = glow_alpha };
+            DrawCircleV(it.pos, it.size * frac * 2.2, glow_color);
+        }
+    }
 }
+    </code></pre>
 
-FONT_SIZE :: 75.0;
-TEXT_SPACING :: 2.0;
+    <p>Main loop — <code>defer EndDrawing()</code>, smooth thrust audio fade, and twinkling stars:</p>
+    <pre><code class="language-rust">
+while !WindowShouldClose() {
+    dt   := GetFrameTime();
+    time := GetTime() as f32;
 
-WINDOW_WIDTH  :: 600.0;
-WINDOW_HEIGHT :: 600.0;
-WINDOW_TITLE  :: c"HELLO_FROM_ROK";
+    // Smooth thrust audio volume interpolation
+    speed := THRUST_FADE_OUT;
+    if thrusting_and_alive  speed = THRUST_FADE_IN;
+    thrust_volume += (thrust_target_vol - thrust_volume) * speed * dt;
+    SetSoundVolume(thrust_sound, thrust_volume);
 
-TEXT_COLOR :: Color { .. };
-BACKGROUND_COLOR :: Color { r = 24, g = 24, b = 24, .. };
+    if thrust_volume < 0.01 && IsSoundPlaying(thrust_sound) {
+        StopSound(thrust_sound);
+    }
 
-TEXT :: c"hello from rok";
+    update_player(*player, dt);
+    update_bullets(*bullets, dt);
+    update_asteroids(*asteroids, dt);
+    update_thrust_particles(*thrust_particles, dt);
+    update_explosion_particles(*explosions, dt);
+    update_stars(*stars, dt);
 
-SHADER :: c"... [full demo soon in the language's repository] ...";
+    points := check_bullet_asteroid(*bullets, *asteroids, *explosions, *state.rng_state);
+    if points > 0  state.score += points;
+
+    BeginDrawing();
+    defer EndDrawing();
+
+    ClearBackground(COLOR_BG);
+    draw_stars(*stars, time);          // twinkle via sinf(time + phase)
+    draw_asteroid_trails(*asteroid_trails);
+    draw_explosion_particles(*explosions);
+    draw_thrust_particles(*thrust_particles);
+    draw_asteroids(*asteroids);
+    draw_bullets(*bullets);
+    draw_player(*player);
+    draw_hud(*state);
+}
 
 #import "std.rok";
 #import "math.rok";
 #import "raylib.rok";
+#import "dynamic_array.rok";
     </code></pre>
   </div>
 
@@ -441,16 +536,10 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       All powered by compile-time generics that specialize for each type.
     </p>
     <pre><code class="language-rust">
-  /*
-     Demonstrates basic features like:
-     Dynamic arrays with automatic growth, compile-time generics that work on any type,
-     and string builders with type-aware formatting.
-  */
-
   // Compile-time polymorphic functions work on any type T
   array_add :: (arr: *[..] $T, value: T) {
       new_len := arr.len + 1;
-      array_ensure_capacity(arr, new_len);  // Auto-grows with 2x strategy
+      array_ensure_capacity(arr, new_len);
 
       ptr: *T = arr.data + (arr.len * size_of(T));
       ptr.* = value;
@@ -466,7 +555,6 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       ptr : *T = arr.data + (index * size);
       ret = ptr.*;
 
-      // Shift elements to maintain order
       count := arr.len - index - 1;
       if count > 0 memmove(ptr, ptr + size, count * size);
 
@@ -474,16 +562,13 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       return ret, true;
   }
 
-  // String builder uses dynamic array internally
   String_Builder :: struct {
       inner: [..] u8;
   }
 
-  // Overloaded append functions for different types
   sb_append :: (sb: *String_Builder, n: i32)    { sb_append_integer(sb, n); }
   sb_append :: (sb: *String_Builder, n: f64)    { sb_append_float(sb, n); }
   sb_append :: (sb: *String_Builder, s: string) { sb_append_string(sb, s); }
-  // ...
 
   // Printf-style formatting with variadic Any
   sb_print :: (sb: *String_Builder, fmt: string, args: ..Any) {
@@ -492,7 +577,7 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       while i < fmt.len {
           if fmt[i] == '%' && i + 1 < fmt.len && fmt[i + 1] != '%' {
               if arg_index < args.len {
-                  sb_append_any(sb, args[arg_index]);  // Type-dispatched at runtime, using type reflection.
+                  sb_append_any(sb, args[arg_index]);
                   arg_index += 1;
               }
               i += 1;
@@ -503,63 +588,15 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
       }
   }
 
-  string_builder_showcase :: () {
-      print("---- String Builder ----\n");
-
+  main :: () {
       sb: String_Builder;
       defer sb_free(*sb);
 
-      // Append different types naturally
       sb_append(*sb, "Temperature: ");
       sb_append(*sb, 98.6);
-      sb_append(*sb, "°F, Status: ");
-      sb_append(*sb, true);
-      sb_append(*sb, "\n");
-
-      // Printf-style formatting
       sb_print(*sb, "User % scored % points\n", "Alice", 1337);
 
-      // Build from integer directly
-      score_str := sb_from_integer(9001);
-      defer sb_free(*score_str);
-
-      sb_append(*sb, "Power level: ");
-      sb_append(*sb, sb_to_string(*score_str));
-
-      result := sb_to_string(*sb);
-      print("%", result);
-  }
-
-  dynamic_array_showcase :: () {
-      print("---- Dynamic Arrays ----\n");
-
-      // Create and populate
-      numbers: [..] i32;
-      defer array_free(*numbers);
-      for 0..5 array_add(*numbers, it * 10);
-
-      // Insert in middle
-      array_insert(*numbers, 2, 999);
-
-      // Safe access with bounds checking
-      ptr := array_get(*numbers, 2);
-      if ptr  print("Element at index 2: %\n", ptr.*);
-
-      // Remove and get value
-      val, ok := array_remove(*numbers, 2);
-      if ok  print("Removed: %\n", val);
-
-      // Swap-remove (O(1) but changes order)
-      array_swap_remove(*numbers, 0);
-
-      print("Final array: ");
-      for numbers print("% ", it);
-      print("\n");
-  }
-
-  main :: () {
-      dynamic_array_showcase();
-      string_builder_showcase();
+      print("%", sb_to_string(*sb));
   }
 
   #import "std.rok";
@@ -598,6 +635,52 @@ SHADER :: c"... [full demo soon in the language's repository] ...";
 <div class="project">
   <h3>
     2.
+    <a href="https://github.com/rakivo/rawgrep" target="_blank" rel="noopener noreferrer" class="project-link">
+      rawgrep
+    </a> — The Fastest Grep in the World
+  </h3>
+  <p>
+    A Rust tool that searches text by reading filesystems <em>directly from raw block devices</em>, completely bypassing the kernel's VFS layer, page cache, and filesystem overhead.
+    Uses aggressive work-stealing parallelism that automatically load-balances across all CPU cores,
+    making it faster than <a href="https://github.com/BurntSushi/ripgrep" target="_blank" rel="noopener noreferrer" class="project-link">ripgrep</a> on real workloads.
+    Requires only <code>CAP_DAC_READ_SEARCH</code> — no full root access. Currently supports ext4 on Linux.
+  </p>
+
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide Demo</div>
+  <div class="content">
+    <p>Basic usage:</p>
+    <pre><code class="language-rust">
+# Search current directory
+rawgrep "error"
+
+# Regex patterns
+rawgrep "error|warning|critical" .
+
+# Filtering levels:
+# Default: respects .gitignore, skips binaries and large files (> 5 MB)
+rawgrep "pattern"
+rawgrep "pattern" -u     # ignore .gitignore
+rawgrep "pattern" -uu    # also search binary files
+rawgrep "pattern" -uuu   # search everything, including large files
+
+# Specify device manually (auto-detected by default)
+rawgrep "pattern" /home --device=/dev/sda1
+
+# Print match statistics
+rawgrep "pattern" . --stats
+    </code></pre>
+
+    <p class="placeholder">Tap on the video to fullscreen</p>
+    <video class="demo-video" autoplay loop muted playsinline>
+      <source src="./assets/rawgrep.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
+<div class="project">
+  <h3>
+    3.
     <a href="https://github.com/rakivo/brik-asm" target="_blank" rel="noopener noreferrer" class="project-link">
       brik-asm
     </a> — RISC-V Assembler
@@ -803,7 +886,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 
 <div class="project">
   <h3>
-    3.
+    4.
     <a href="https://github.com/rakivo/stalkr" target="_blank" rel="noopener noreferrer" class="project-link">
       Stalkr
     </a> — language-agnostic TODO Tracker
@@ -851,7 +934,7 @@ TK::CQuote => {
         ...
     }
 }
-    </code></pre>
+  </code></pre>
 
     <p>
     Run <a href="https://github.com/rakivo/stalkr" target="_blank" rel="noopener noreferrer" class="project-link">Stalkr</a> on this codebase you'll see this:
@@ -913,7 +996,7 @@ selection (e.g. 1,2; 'a' all; 's' skip file; 'h' help; '^C' quit): 1
 
 <div class="project">
   <h3>
-    4.
+    5.
     <a href="https://github.com/rakivo/rush" target="_blank" rel="noopener noreferrer" class="project-link">
       Rush
     </a> — Rust-based build system inspired by Ninja
@@ -954,7 +1037,7 @@ build run:
 phony clean
 build clean:
   command = rm -f $builddir/*
-    </code></pre>
+  </code></pre>
 
     <p>
     Me showcasing
@@ -1050,21 +1133,17 @@ build clean:
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // --- smooth scroll on load if there's a hash ---
   if (window.location.hash) {
     const targetId = window.location.hash.slice(1);
     const targetEl = document.getElementById(targetId);
     if (targetEl) {
-      // prevent browser's default instant jump
       window.scrollTo(0, 0);
-      // then smooth scroll
       setTimeout(() => {
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 150); // short delay to ensure layout is ready
+      }, 150);
     }
   }
 
-  // --- your anchor link copy behavior (no change) ---
   document.querySelectorAll('.anchor-link').forEach(link => {
     link.addEventListener('click', async e => {
       const href = link.getAttribute('href');
@@ -1123,9 +1202,9 @@ document.querySelectorAll('.demo-video').forEach(video => {
   video.addEventListener('click', () => {
     if (video.requestFullscreen) {
       video.requestFullscreen();
-    } else if (video.webkitRequestFullscreen) { // Safari
+    } else if (video.webkitRequestFullscreen) {
       video.webkitRequestFullscreen();
-    } else if (video.msRequestFullscreen) { // IE11
+    } else if (video.msRequestFullscreen) {
       video.msRequestFullscreen();
     }
   });
