@@ -321,8 +321,9 @@ ValuePool :: struct (T: Type) {
 
 // Allocate a new list inside the pool, returns a typed handle.
 alloc_list :: (pool: *ValuePool($T), elements: [] T) -> EntityList(T) {
-    #if size_of(T) < size_of(u32)
+    #if size_of(T) < size_of(u32) {
         #run panic("size_of(T) in ValuePool(T) must be >= 4 bytes!");
+    }
 
     count    := elements.len as u32;
     needed   := 1 + count;
@@ -344,12 +345,17 @@ alloc_list :: (pool: *ValuePool($T), elements: [] T) -> EntityList(T) {
     zero: T;
     for 0..capacity - needed  array_add(*pool.data, zero);
 
-    return EntityList(T).{ handle = element_start };
+    list: EntityList(T);
+    list.handle = element_start;
+    return list;
 }
 
 // Retrieve a slice view into the pool — zero-copy, no allocation.
 get_list :: (pool: *ValuePool($T), list: EntityList(T)) -> [] T {
-    if list.handle == INVALID_HANDLE  return .{};
+    if list.handle == INVALID_HANDLE {
+        result: [] T;
+        return result;
+    }
 
     length_ptr := *pool.data[list.handle - 1] as *u32;
 
