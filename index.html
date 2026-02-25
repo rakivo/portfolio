@@ -297,12 +297,12 @@ polymorph solver, register machine, and an extremely flexible pipeline for insan
   <p>
 
   <!-- ValuePool Demo -->
-  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide ValuePool — Compile-Time Generic Memory Pool</div>
+  <div class="toggle-button" onclick="toggleContent(this)">Show / Hide ValuePool — Generic Memory Pool</div>
   <div class="content">
     <p>
-      A compile-time generic memory pool for storing lists of any type <code>T</code>.
+      A generic memory pool for storing lists of any type <code>T</code>.
       Uses a handle-based API for indirection, power-of-two capacity rounding,
-      and interprets raw memory slots as <code>u32</code> length headers — all resolved at compile time via rok's polymorph solver.
+      and interprets raw memory slots as <code>u32</code> length headers.
     </p>
     <pre><code class="language-rust">
 INVALID_HANDLE : u32 : 0xFFFFFFFF;
