@@ -55,6 +55,34 @@ Prism.languages.brik = {
     line-height: 1.6;
   }
 
+  header {
+      position: relative;
+  }
+  header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('./assets/constellation.png');
+      background-repeat: no-repeat;
+      background-size: 31%;
+      background-position: 100%;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+  }
+  header > * {
+      position: relative;
+      z-index: 1;
+  }
+
+  @media (max-width: 650px) {
+      header::before {
+          background-size: contain;
+          background-position: center top;
+          opacity: 0.13;
+      }
+  }
+
   h1 {
       font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-weight: 250;
@@ -636,6 +664,18 @@ while !WindowShouldClose() {
     Currently in a private repository; planned public release in H1 2026.
   </p>
   <p class="placeholder">Demo video/GIF will go here soon</p>
+
+  <p style="font-size:1.0em;">
+    And yes, the language currently is almost identical to JAI, Jonathan Blow's language, and I wanna be very open about that — I just find this subset of the language insanely beautiful and elegant.
+  </p>
+
+  <p style="font-size:1.0em;">
+    It's actually pretty funny how Rok ended up this way, because when I started it, it was rather a mix of Go and Rust, and a bit of JAI. But as time went on I was influenced by Blow more and more — I literally watched his livestreams, cranking sessions, talks and all sorts of other events all day and all night. His demos were the biggest source of motivation for me in my life... so the language gradually started to look more and more like JAI..
+  </p>
+
+  <p style="font-size:1.0em;">
+    In the future, though, I have some features in mind that I wanna add that aren't really JAI-ish per se, so I expect the courses of the two languages to diverge more and more over time — which is a good thing, because why does anyone need two identical languages?
+  </p>
 </div>
 
 <div class="project">
